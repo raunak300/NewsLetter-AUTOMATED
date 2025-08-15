@@ -1,16 +1,16 @@
 const mongoose=require('mongoose');
-const URI=process.env.MONGOOSE_URI;
-const connect=async()=>{
-try {
-        await mongoose.connect(URI)
-        console.log("Connected to MongoDB Atlas");
-    }
- catch (error) {
-    console.log('Eroor in connection: ',error)
-}
-}
+// const URI=process.env.MONGOOSE_URI;
+// const connect=async()=>{
+// try {
+//         await mongoose.connect(URI)
+//         console.log("Connected to MongoDB Atlas");
+//     }
+//  catch (error) {
+//     console.log('Eroor in connection: ',error)
+// }
+// }
 
-connect();
+// connect();
 
 const newsSchema = new mongoose.Schema({
   title: { type: String, required: true },
