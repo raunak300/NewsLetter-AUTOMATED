@@ -1,7 +1,7 @@
 // api/storeTweets.js — Vercel serverless API route (CommonJS)
 
 const { Pinecone } = require("@pinecone-database/pinecone");
-const fetch = require("node-fetch"); // Remove if on Node 18+ runtime in Vercel
+// const fetch = require("node-fetch"); // Remove if on Node 18+ runtime in Vercel
 
 // Get embeddings from Pinecone's own model (matches 1024 dimensions)
 async function getLlamaEmbedding(text) {
