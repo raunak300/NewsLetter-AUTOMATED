@@ -67,6 +67,9 @@ const Component = () => {
 
       {/* Pagination buttons */}
       <div className="flex flex-row gap-6 mt-6">
+        <span>
+          Page {pageNo} of {totalpages}
+        </span>
         <button
           onClick={() => setPageNo((prev) => Math.max(prev - 1, 1))}
           className="px-5 py-2 font-semibold rounded transition"
