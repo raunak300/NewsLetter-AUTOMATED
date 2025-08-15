@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const NEWS = require('../Backend/Model/News.js');
+const NEWS = require('../../Backend/Model/News.js');
 const dotenv = require('dotenv');
 dotenv.config();
 const API1 = process.env.API1;
