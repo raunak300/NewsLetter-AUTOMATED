@@ -3,7 +3,7 @@ const app=express();
 // const dotenv=require('dotenv')
 // dotenv.config()
 
-const PORT=process.env.port;
+const PORT=process.env.PORT || 3000;
 
 const CORS=require('cors');
 app.use(CORS())
