@@ -64,11 +64,12 @@ const getanalysis = async (req, res) => {
   const { text } = req.body;
 
   try {
+    HF_API_KEY="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"
     const url = "https://api-inference.huggingface.co/models/Pulk17/Fake-News-Detection";
     console.log(HF_API_KEY)
     console.log("Text to analyze:", text);
     const headers = {
-      "Authorization": `Bearer ${process.env.HF_API_KEY}`, // Store your key in .env
+      "Authorization": `Bearer ${HF_API_KEY}`, // Store your key in .env
       "Content-Type": "application/json"
     };
 
