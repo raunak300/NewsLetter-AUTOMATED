@@ -1,6 +1,7 @@
 const { response } = require('express');
 const NEWS=require('../Model/News.js')
 const API1=process.env.API1;
+const axios = require("axios");
 
 
 const fillNews = async (req, res) => {
