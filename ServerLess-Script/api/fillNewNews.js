@@ -5,6 +5,10 @@ const NEWS = require('../Models/News.js'); // Model file ka sahi path
 // Isliye dotenv ki zarurat nahi. Variables ko aise hi use karna hai.
 const API1 = process.env.API1;
 const MONGOOSE_URI = process.env.MONGOOSE_URI;
+
+const keywords=['Finance','Business' , 'Economy', 'Education' ,'Technology' , 'Health' , 'Science','Geoplotics','Bitcoin' ]
+const keyword = keywords[Math.floor(Math.random() * keywords.length)];
+
 // Yeh Vercel serverless function ka sahi format hai
 module.exports = async (req, res) => {
   try {
@@ -13,7 +17,7 @@ module.exports = async (req, res) => {
     console.log("Connected to MongoDB Atlas");
 
     // News API ko call karo
-    const apires = await fetch(`https://newsapi.org/v2/everything?q=Finance&pageSize=20&apiKey=${API1}`);
+    const apires = await fetch(`https://newsapi.org/v2/everything?q=${keyword}&pageSize=20&apiKey=${API1}`);
     const data1 = await apires.json();
 
     if (!data1.articles || data1.articles.length === 0) {
