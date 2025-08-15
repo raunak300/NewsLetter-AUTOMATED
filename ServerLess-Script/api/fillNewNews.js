@@ -10,6 +10,7 @@ module.exports = async (req, res) => {
   try {
     // MongoDB se connect
     await mongoose.connect(MONGOOSE_URI);
+    console.log("Connected to MongoDB Atlas");
 
     // News API ko call karo
     const apires = await fetch(`https://newsapi.org/v2/everything?q=Finance&pageSize=20&apiKey=${API1}`);
