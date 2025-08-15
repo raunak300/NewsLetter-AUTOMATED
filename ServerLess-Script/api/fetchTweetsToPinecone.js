@@ -1,5 +1,5 @@
-import fetch from "node-fetch";
-import { Pinecone } from "@pinecone-database/pinecone";
+// ✅ Use native fetch in Node 18+ (no node-fetch import needed)
+const { Pinecone } = require("@pinecone-database/pinecone");
 
 const HF_MODEL = "sentence-transformers/all-MiniLM-L6-v2";
 
@@ -28,7 +28,7 @@ async function getEmbedding(text) {
     return result[0];
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     try {
         const keywords = ["Finance", "Business", "Economy", "Education", "Technology", "Health", "Science", "Geopolitics", "Bitcoin"];
         const keyword = keywords[Math.floor(Math.random() * keywords.length)];
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
             return res.status(200).json({ message: "No tweets found." });
         }
 
-        // Init new Pinecone SDK
+        // Init Pinecone SDK
         const pc = new Pinecone({
             apiKey: process.env.PINECONE_API_KEY
         });
@@ -105,4 +105,4 @@ export default async function handler(req, res) {
         console.error("Error:", error);
         res.status(500).json({ error: error.message });
     }
-}
+};
