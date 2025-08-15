@@ -1,3 +1,4 @@
+const { response } = require('express');
 const NEWS=require('../Model/News.js')
 const API1=process.env.API1;
 
@@ -58,5 +59,29 @@ const sendNews=async(req,res)=>{
     }
 }
 
+const getanalysis = async (req, res) => {
+  const { text } = req.body;
 
-module.exports = { fillNews, sendNews };
+  try {
+    const url = "https://api-inference.huggingface.co/models/Pulk17/Fake-News-Detection";
+
+    const headers = {
+      "Authorization": `Bearer ${process.env.HF_API_KEY}`, // Store your key in .env
+      "Content-Type": "application/json"
+    };
+
+    const payload = { inputs: text }; // "inputs" is the correct field name
+
+    const response = await axios.post(url, payload, { headers });
+
+    return res.status(200).json(response.data);
+
+  } catch (error) {
+    console.error("Model inference error:", error.message);
+    return res.status(500).json({ error: "Problem in running model" });
+  }
+};
+
+
+
+module.exports = { fillNews, sendNews,getanalysis };

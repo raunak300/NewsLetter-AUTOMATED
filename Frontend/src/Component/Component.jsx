@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { PAGE_CALL } from "../API/APIcall";
+import { API ,PAGE_CALL } from "../API/APIcall";
 
 const NAVY = "#04233A"; // your premium navy blue
 
@@ -11,6 +11,8 @@ const Component = () => {
   const [totalpages, setTotalPages] = useState(1);
   const [openUI, setopenUI] = useState(false)
   const [itemVal, setitemVal] = useState(0)
+  const [analyzed, setanalyzed] = useState(false)
+  const [analyzedData, setanalyzedData] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +33,23 @@ const Component = () => {
     setitemVal(index);
     setopenUI(true);
   };
+
+  const doAnalyze=async()=>{
+     try {
+    const stringToAnalyze = `${data[itemVal].title} ${data[itemVal].description} ${data[itemVal].Details}`;
+    
+    const response = await axios.post(`${API}/analyze`, { text: stringToAnalyze });
+
+    if (response.status === 200) {
+      setanalyzed(true);
+      setanalyzedData(response.data);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error analyzing article");
+    return;
+  }
+  }
 
   return Loading ? (
     <div className="flex items-center justify-center h-screen text-gray-400 text-xl">
@@ -111,7 +130,9 @@ const Component = () => {
           >
             {/* Close Button */}
             <button
-              onClick={() => setopenUI(false)}
+              onClick={() =>{ setopenUI(false)
+                setanalyzed(false)}
+              }
               className="absolute top-4 right-4 text-lg font-bold px-3 py-1 rounded-full hover:bg-gray-200 transition"
               style={{ color: NAVY }}
             >
@@ -130,16 +151,23 @@ const Component = () => {
             <div className="flex-grow" />
 
             {/* Analyze Button */}
-            <button
+            {!analyzed ?
+              <button
               className="px-5 py-2 font-semibold rounded transition self-start"
               style={{
                 backgroundColor: NAVY,
                 color: "white"
               }}
-              onClick={() => alert("Analyze action here")}
+              onClick={() => doAnalyze() }
             >
               Analyze
             </button>
+          :
+          <div>
+            <div className="text-lg font-semibold mb-2">Analysis Result:</div>
+            <div className="text-base"> {analyzedData} </div>
+          </div>  
+          }
           </div>
         </div>
       )}

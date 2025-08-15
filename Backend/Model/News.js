@@ -17,7 +17,7 @@ try {
 const newsSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
-  sentiment: { type: String, enum: ["positive", "neutral", "negative"] },
+  sentiment: { type: String, enum: ["False","True"] },
   Detail:{type:String},
   publishedBy: { type: String }, // source name
   publishedAt: { type: Date },   // when the news was published
