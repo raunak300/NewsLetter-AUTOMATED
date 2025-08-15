@@ -1,0 +1,12 @@
+node_modules/
+Backend/node_modules/
+Frontend/node_modules/
+ServerLess-Script/node_modules/
+# Env files
+.env
+.env.local
+.env.*.local
+Backend/.env
+Frontend/.env
+ServerLess-Script/.env
+
