@@ -4,12 +4,14 @@ const connect=async()=>{
 try {
         await mongoose.connect(URI)
         console.log("Connected to MongoDB Atlas");
+
     }
  catch (error) {
     console.log('Eroor in connection: ',error)
 }
 }
 
+    connect();
 
 
 const newsSchema = new mongoose.Schema({

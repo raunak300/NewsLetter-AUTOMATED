@@ -18,6 +18,5 @@ app.use('/api',Postroutes);
 
 app.listen(PORT,()=>{
     console.log("Listening on port", PORT);
-    connect();
     
 })
