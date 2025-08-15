@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     console.log("Connected to MongoDB Atlas");
 
     // News API ko call karo
-    const apires = await fetch(`https://newsapi.org/v2/everything?q=${keyword}&pageSize=20&apiKey=${API1}`);
+    const apires = await fetch(`https://newsapi.org/v2/everything?q=${keyword}&pageSize=50&apiKey=${API1}`);
     const data1 = await apires.json();
 
     if (!data1.articles || data1.articles.length === 0) {
