@@ -1,39 +1,46 @@
-// ✅ Use native fetch in Node 18+ (no node-fetch import needed)
+// api/storeTweets.js — Vercel serverless API route (CommonJS)
+
 const { Pinecone } = require("@pinecone-database/pinecone");
+const fetch = require("node-fetch"); // Remove if on Node 18+ runtime in Vercel
 
-const HF_MODEL = "sentence-transformers/all-MiniLM-L6-v2";
-
-async function getEmbedding(text) {
-    const HF_API_URL = `https://api-inference.huggingface.co/pipeline/feature-extraction/${HF_MODEL}`;
-
-    const response = await fetch(HF_API_URL, {
+// Get embeddings from Pinecone's own model (matches 1024 dimensions)
+async function getLlamaEmbedding(text) {
+    const resp = await fetch("https://api.pinecone.io/embed", {
         method: "POST",
         headers: {
-            Authorization: `Bearer ${process.env.HF_API_KEY}`,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Api-Key": process.env.PINECONE_API_KEY
         },
-        body: JSON.stringify(text)
+        body: JSON.stringify({
+            model: "llama-text-embed-v2",
+            input: text
+        })
     });
 
-    if (!response.ok) {
-        throw new Error(`HF API error: ${response.statusText}`);
+    if (!resp.ok) {
+        throw new Error(`Embedding API error: ${resp.statusText}`);
     }
 
-    const result = await response.json();
-
-    // Flatten nested arrays if needed
-    if (Array.isArray(result[0]) && Array.isArray(result[0][0])) {
-        return result[0][0];
-    }
-    return result[0];
+    const data = await resp.json();
+    return data.data[0].values;
 }
 
 module.exports = async function handler(req, res) {
     try {
-        const keywords = ["Finance", "Business", "Economy", "Education", "Technology", "Health", "Science", "Geopolitics", "Bitcoin"];
+        const keywords = [
+            "Finance",
+            "Business",
+            "Economy",
+            "Education",
+            "Technology",
+            "Health",
+            "Science",
+            "Geopolitics",
+            "Bitcoin"
+        ];
         const keyword = keywords[Math.floor(Math.random() * keywords.length)];
 
-        // Fetch from Twitter API
+        // Fetch tweets from Twitter API
         const twitterRes = await fetch(
             `https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(keyword)}&max_results=3&tweet.fields=created_at,lang`,
             {
@@ -51,33 +58,13 @@ module.exports = async function handler(req, res) {
             apiKey: process.env.PINECONE_API_KEY
         });
 
-        // Ensure index exists
-        const indexName = "twitter-data";
-        const existingIndexes = await pc.listIndexes();
+        // Connect to your existing serverless index (name + host from .env)
+        const index = pc.index("news-api",`https://news-api-hn74z2y.svc.aped-4627-b74a.pinecone.io`);
 
-        if (!existingIndexes.indexes.some(idx => idx.name === indexName)) {
-            await pc.createIndex({
-                name: indexName,
-                dimension: 384, // for all-MiniLM-L6-v2
-                metric: "cosine",
-                spec: {
-                    serverless: {
-                        cloud: "aws",
-                        region: "us-east-1"
-                    }
-                }
-            });
-
-            console.log(`Index ${indexName} created. Waiting until ready...`);
-            await pc.waitUntilReady(indexName);
-        }
-
-        const index = pc.index(indexName);
-
-        // Store each tweet embedding
+        // Store each tweet in Pinecone
         for (let tweet of twitterData.data) {
             try {
-                const vector = await getEmbedding(tweet.text);
+                const vector = await getLlamaEmbedding(tweet.text);
 
                 await index.upsert([
                     {
@@ -99,7 +86,9 @@ module.exports = async function handler(req, res) {
             }
         }
 
-        res.status(200).json({ message: `Stored ${twitterData.data.length} tweets for keyword: ${keyword}` });
+        res.status(200).json({
+            message: `Stored ${twitterData.data.length} tweets for keyword: ${keyword}`
+        });
 
     } catch (error) {
         console.error("Error:", error);
