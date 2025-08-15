@@ -18,6 +18,7 @@ const newsSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
   sentiment: { type: String, enum: ["positive", "neutral", "negative"] },
+  Detail:{type:String},
   publishedBy: { type: String }, // source name
   publishedAt: { type: Date },   // when the news was published
   url: { type: String, unique: true }, // link to the article

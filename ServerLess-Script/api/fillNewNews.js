@@ -33,6 +33,7 @@ module.exports = async (req, res) => {
           sentiment: null,
           publishedBy: article.source?.name || "Unknown",
           publishedAt: new Date(article.publishedAt),
+           Detail: article.content,
           url: article.url
         });
       } catch (err) {

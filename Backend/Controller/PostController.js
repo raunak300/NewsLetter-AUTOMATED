@@ -18,6 +18,7 @@ const fillNews = async (req, res) => {
           title: article.title,
           description: article.description,
           sentiment: null,
+          Detail: article.content,
           publishedBy: article.source?.name || "Unknown",
           publishedAt: new Date(article.publishedAt),
           url: article.url
