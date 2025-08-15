@@ -65,7 +65,8 @@ const getanalysis = async (req, res) => {
 
   try {
     const url = "https://api-inference.huggingface.co/models/Pulk17/Fake-News-Detection";
-
+    console.log(HF_API_KEY)
+    console.log("Text to analyze:", text);
     const headers = {
       "Authorization": `Bearer ${process.env.HF_API_KEY}`, // Store your key in .env
       "Content-Type": "application/json"
@@ -74,7 +75,7 @@ const getanalysis = async (req, res) => {
     const payload = { inputs: text }; // "inputs" is the correct field name
 
     const response = await axios.post(url, payload, { headers });
-
+    console.log("Response from model:", response.data);
     return res.status(200).json(response.data);
 
   } catch (error) {
