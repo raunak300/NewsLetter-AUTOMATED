@@ -1,0 +1,61 @@
+const NEWS=require('../Model/News.js')
+const API1=process.env.API1;
+
+
+const fillNews = async (req, res) => {
+  try {
+    const apires = await fetch(`https://newsapi.org/v2/everything?q=Finance&pageSize=20&apiKey=${API1}`);
+    const data1 = await apires.json();
+
+    if (!data1.articles) {
+      return res.status(400).json({ message: "No articles found" });
+    }
+
+    // Loop and save articles
+    for (let article of data1.articles) {
+      try {
+        await NEWS.create({
+          title: article.title,
+          description: article.description,
+          sentiment: null,
+          publishedBy: article.source?.name || "Unknown",
+          publishedAt: new Date(article.publishedAt),
+          url: article.url
+        });
+      } catch (err) {
+        // Ignore duplicate URL errors
+        if (err.code !== 11000) {
+          console.error("Error saving article:", err);
+        }
+      }
+    }
+
+    res.json({ message: "News saved successfully", count: data1.articles.length });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+const sendNews=async(req,res)=>{
+    try {
+        const page=parseInt(req.query.page) || 1;
+        const limit=5;
+        const skip=(page-1)*limit;
+        const totalNews=await NEWS.countDocuments();
+        const pagesNo=Math.ceil(totalNews/limit);
+        const news=await NEWS.find().sort({publishedAt:-1}).skip(skip).limit(limit);
+        res.json({
+            news,pagesNo,totalNews
+        })
+        
+    } catch (error) {
+        console.log("Eroor in fetching news: ",error)
+        res.status(500).json({ error: "Error fetching news" });
+
+    }
+}
+
+
+module.exports = { fillNews, sendNews };
