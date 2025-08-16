@@ -165,8 +165,12 @@ const Component = () => {
           :
           <div>
             <div className="text-lg font-semibold mb-2">Analysis Result:</div>
-            <div className="text-base"> {analyzedData} </div>
-          </div>  
+<div>
+  <div className="text-lg font-semibold mb-2">Analysis Result:</div>
+  <div className="text-base">
+    {analyzedData?.prediction || JSON.stringify(analyzedData)}
+  </div>
+</div>          </div>  
           }
           </div>
         </div>
