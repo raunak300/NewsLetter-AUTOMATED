@@ -42,7 +42,7 @@ const Component = () => {
 
     if (response.status === 200) {
       setanalyzed(true);
-      setanalyzedData(response.data);
+      setanalyzedData(response.data.fastapiResult);
     }
   } catch (error) {
     console.error(error);

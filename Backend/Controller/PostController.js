@@ -4,22 +4,22 @@ const API1=process.env.API1;
 const axios = require("axios");
 
 
-const fillNews = async (req, res) => {
-  try {
-    const {text}=req.body;
-    console.log("Anaylse Text:",text);
-    const fastapiResponse= await axios.post(" http://127.0.0.1:8000/predict", {text});
-    console.log("FastAPI Response:", fastapiResponse.data);
-    res.json({ 
-      message: "Prediction done",
-      fastapiResult: fastapiResponse.data 
-    });
+// const fillNews = async (req, res) => {
+//   try {
+//     const {text}=req.body;
+//     console.log("Anaylse Text:",text);
+//     const fastapiResponse= await axios.post(" http://127.0.0.1:8000/predict", {text});
+//     console.log("FastAPI Response:", fastapiResponse.data);
+//     res.ststus(200).json({ 
+//       message: "Prediction done",
+//       fastapiResult: fastapiResponse.data 
+//     });
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
-  }
-};
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// };
 
 const sendNews=async(req,res)=>{
     try {
@@ -44,24 +44,18 @@ const getanalysis = async (req, res) => {
   const { text } = req.body;
 
   try {
-    HF_API_KEY="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"
-    const url = "https://api-inference.huggingface.co/models/Pulk17/Fake-News-Detection";
-    console.log(HF_API_KEY)
-    console.log("Text to analyze:", text);
-    const headers = {
-      "Authorization": `Bearer ${HF_API_KEY}`, // Store your key in .env
-      "Content-Type": "application/json"
-    };
-
-    const payload = { inputs: text }; // "inputs" is the correct field name
-
-    const response = await axios.post(url, payload, { headers });
-    console.log("Response from model:", response.data);
-    return res.status(200).json(response.data);
+    const {text}=req.body;
+    console.log("Anaylse Text:",text);
+    const fastapiResponse= await axios.post("https://newsletter-automated-1.onrender.com/predict", {text});
+    console.log("FastAPI Response:", fastapiResponse.data);
+    res.status(200).json({ 
+      message: "Prediction done",
+      fastapiResult: fastapiResponse.data 
+    });
 
   } catch (error) {
-    console.error("Model inference error:", error.message);
-    return res.status(500).json({ error: "Problem in running model" });
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
