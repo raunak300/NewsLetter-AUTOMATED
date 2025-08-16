@@ -6,34 +6,14 @@ const axios = require("axios");
 
 const fillNews = async (req, res) => {
   try {
-    const apires = await fetch(`https://newsapi.org/v2/everything?q=Finance&pageSize=20&apiKey=${API1}`)
-    const data1 = await apires.json();
-
-    if (!data1.articles) {
-      return res.status(400).json({ message: "No articles found" });
-    }
-
-    // Loop and save articles
-    for (let article of data1.articles) {
-      try {
-        await NEWS.create({
-          title: article.title,
-          description: article.description,
-          sentiment: null,
-          Detail: article.content,
-          publishedBy: article.source?.name || "Unknown",
-          publishedAt: new Date(article.publishedAt),
-          url: article.url
-        });
-      } catch (err) {
-        // Ignore duplicate URL errors
-        if (err.code !== 11000) {
-          console.error("Error saving article:", err);
-        }
-      }
-    }
-
-    res.json({ message: "News saved successfully", count: data1.articles.length });
+    const {text}=req.body;
+    console.log("Anaylse Text:",text);
+    const fastapiResponse= await axios.post(" http://127.0.0.1:8000/predict", {text});
+    console.log("FastAPI Response:", fastapiResponse.data);
+    res.json({ 
+      message: "Prediction done",
+      fastapiResult: fastapiResponse.data 
+    });
 
   } catch (error) {
     console.error(error);
