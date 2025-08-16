@@ -61,4 +61,4 @@ const getanalysis = async (req, res) => {
 
 
 
-module.exports = { fillNews, sendNews,getanalysis };
+module.exports = {  sendNews,getanalysis };
