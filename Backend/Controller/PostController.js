@@ -6,7 +6,7 @@ const axios = require("axios");
 
 const fillNews = async (req, res) => {
   try {
-    const apires = await fetch(`https://newsapi.org/v2/everything?q=Finance&pageSize=20&apiKey=${API1}`);
+    const apires = await fetch(`https://newsapi.org/v2/everything?q=Finance&pageSize=20&apiKey=${API1}`)
     const data1 = await apires.json();
 
     if (!data1.articles) {
