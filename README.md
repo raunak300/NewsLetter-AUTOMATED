@@ -4,7 +4,7 @@
 This project is a **full-stack Fake News Detection System** that integrates multiple services to automate **news collection, analysis, and verification**.  
 
 The system uses a **Machine Learning model** trained on a Kaggle dataset to predict whether a news article is **Real** or **Fake**.  
-
+Link: https://news-letter-automated.vercel.app/
 ### 🚀 Technologies Used
 - **Frontend:** React / Next.js → Deployed on Vercel  
 - **Backend API:** Node.js + Express → Deployed on Render  
@@ -61,3 +61,4 @@ The system uses a **Machine Learning model** trained on a Kaggle dataset to pred
 ---
 
 ## 📂 Project Structure
+![Architecture Diagram](assets/Screenshot154050.png)
