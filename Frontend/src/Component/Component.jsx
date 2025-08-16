@@ -129,6 +129,7 @@ const Component = () => {
               onClick={() => {
                 setopenUI(false);
                 setanalyzed(false);
+                setanalyzedData({});
               }}
               className="absolute top-4 right-4 text-lg font-bold px-3 py-1 rounded-full hover:bg-gray-200 transition"
               style={{ color: NAVY }}
@@ -164,16 +165,16 @@ const Component = () => {
                 <div className="text-lg font-semibold mb-2 text-black">
                   Analysis Result:
                 </div>
-                {analyzedData?.prediction === "Fake" ? (
-                  <div className="text-base text-red-500">
-                    {analyzedData.prediction}
-                  </div>
-                ) : (
-                  <div className="text-base text-green-500">
-                    {analyzedData?.prediction ||
-                      JSON.stringify(analyzedData)}
-                  </div>
-                )}
+               {analyzedData?.prediction?.toUpperCase() === "FAKE" ? (
+  <div className="text-base text-red-500">
+    {analyzedData.prediction}
+  </div>
+) : (
+  <div className="text-base text-green-500">
+    {analyzedData.prediction}
+  </div>
+)}
+
               </div>
             )}
           </div>
