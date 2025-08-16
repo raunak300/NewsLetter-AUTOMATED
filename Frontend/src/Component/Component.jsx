@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { API ,PAGE_CALL } from "../API/APIcall";
+import { API, PAGE_CALL } from "../API/APIcall";
 
 const NAVY = "#04233A"; // your premium navy blue
 
@@ -9,9 +9,9 @@ const Component = () => {
   const [Loading, setLoading] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [totalpages, setTotalPages] = useState(1);
-  const [openUI, setopenUI] = useState(false)
-  const [itemVal, setitemVal] = useState(0)
-  const [analyzed, setanalyzed] = useState(false)
+  const [openUI, setopenUI] = useState(false);
+  const [itemVal, setitemVal] = useState(0);
+  const [analyzed, setanalyzed] = useState(false);
   const [analyzedData, setanalyzedData] = useState({});
 
   useEffect(() => {
@@ -20,10 +20,11 @@ const Component = () => {
         setLoading(true);
         const Ndata = await axios.get(`${PAGE_CALL}?page=${pageNo}`);
         setData(Ndata.data.news);
-        setTotalPages(Ndata.data.pagesNo)
+        setTotalPages(Ndata.data.pagesNo);
         setLoading(false);
       } catch (error) {
         alert("Error Fetching data");
+        setLoading(false);
       }
     };
     fetchData();
@@ -34,22 +35,23 @@ const Component = () => {
     setopenUI(true);
   };
 
-  const doAnalyze=async()=>{
-     try {
-    const stringToAnalyze = `${data[itemVal].title} ${data[itemVal].description} ${data[itemVal].Details}`;
-    
-    const response = await axios.post(`${API}/analyze`, { text: stringToAnalyze });
+  const doAnalyze = async () => {
+    try {
+      const stringToAnalyze = `${data[itemVal].title} ${data[itemVal].description} ${data[itemVal].Details}`;
 
-    if (response.status === 200) {
-      setanalyzed(true);
-      setanalyzedData(response.data.fastapiResult);
+      const response = await axios.post(`${API}/analyze`, { text: stringToAnalyze });
+
+      if (response.status === 200) {
+        setanalyzed(true);
+        console.log("FastAPI Response:", response.data); // Debug
+        setanalyzedData(response.data.fastapiResult);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error analyzing article");
+      return;
     }
-  } catch (error) {
-    console.error(error);
-    alert("Error analyzing article");
-    return;
-  }
-  }
+  };
 
   return Loading ? (
     <div className="flex items-center justify-center h-screen text-gray-400 text-xl">
@@ -70,14 +72,10 @@ const Component = () => {
             className="border-2 p-6 rounded-xl shadow-lg cursor-pointer transform transition-transform duration-200 hover:-translate-y-1 hover:shadow-2xl"
             style={{
               borderColor: NAVY,
-              backgroundColor: "#f8fafc" // light background inside card
+              backgroundColor: "#f8fafc",
             }}
-
           >
-            <h2
-              className="font-semibold text-xl mb-3"
-              style={{ color: NAVY }}
-            >
+            <h2 className="font-semibold text-xl mb-3" style={{ color: NAVY }}>
               {item.title}
             </h2>
             <p className="text-sm" style={{ color: NAVY }}>
@@ -100,7 +98,7 @@ const Component = () => {
           >
             Previous
           </button>
-          {totalpages > pageNo &&
+          {totalpages > pageNo && (
             <button
               onClick={() => setPageNo((prev) => prev + 1)}
               className="px-5 py-2 font-semibold rounded transition"
@@ -108,31 +106,30 @@ const Component = () => {
             >
               Next
             </button>
-          }
+          )}
         </div>
-
       </div>
+
+      {/* Modal */}
       {openUI && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm z-50"
-        >
-          {/* Modal Box */}
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm z-50">
           <div
             className="relative rounded-2xl shadow-2xl p-8 flex flex-col gap-4"
             style={{
               width: "60%",
               height: "75%",
-              backgroundColor: "#f8fafc", // matching card background
+              backgroundColor: "#f8fafc",
               border: `2px solid ${NAVY}`,
               color: NAVY,
-              overflowY: "auto"
+              overflowY: "auto",
             }}
           >
             {/* Close Button */}
             <button
-              onClick={() =>{ setopenUI(false)
-                setanalyzed(false)}
-              }
+              onClick={() => {
+                setopenUI(false);
+                setanalyzed(false);
+              }}
               className="absolute top-4 right-4 text-lg font-bold px-3 py-1 rounded-full hover:bg-gray-200 transition"
               style={{ color: NAVY }}
             >
@@ -151,31 +148,37 @@ const Component = () => {
             <div className="flex-grow" />
 
             {/* Analyze Button */}
-            {!analyzed ?
+            {!analyzed ? (
               <button
-              className="px-5 py-2 font-semibold rounded transition self-start"
-              style={{
-                backgroundColor: NAVY,
-                color: "white"
-              }}
-              onClick={() => doAnalyze() }
-            >
-              Analyze
-            </button>
-          :
-          <div>
-            <div className="text-lg font-semibold mb-2">Analysis Result:</div>
-<div>
-  <div className="text-lg font-semibold mb-2">Analysis Result:</div>
-  <div className="text-base">
-    {analyzedData?.prediction || JSON.stringify(analyzedData)}
-  </div>
-</div>          </div>  
-          }
+                className="px-5 py-2 font-semibold rounded transition self-start"
+                style={{
+                  backgroundColor: NAVY,
+                  color: "white",
+                }}
+                onClick={doAnalyze}
+              >
+                Analyze
+              </button>
+            ) : (
+              <div>
+                <div className="text-lg font-semibold mb-2 text-black">
+                  Analysis Result:
+                </div>
+                {analyzedData?.prediction === "Fake" ? (
+                  <div className="text-base text-red-500">
+                    {analyzedData.prediction}
+                  </div>
+                ) : (
+                  <div className="text-base text-green-500">
+                    {analyzedData?.prediction ||
+                      JSON.stringify(analyzedData)}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}
-
     </div>
   );
 };
