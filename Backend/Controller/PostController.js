@@ -45,7 +45,11 @@ const getanalysis = async (req, res) => {
   try {
     const {text}=req.body;
     console.log("Anaylse Text:",text);
-    const fastapiResponse= await axios.post("https://newsletter-automated-1.onrender.com/predict", {text});
+   const fastapiResponse = await axios.post(
+  "https://newsletter-automated-1.onrender.com/predict",
+  { text },
+  { timeout: 70000 }   // wait up to 60s
+);
     console.log("FastAPI Response:", fastapiResponse.data);
     res.status(200).json({ 
       message: "Prediction done",
