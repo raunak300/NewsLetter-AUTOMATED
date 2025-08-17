@@ -62,3 +62,13 @@ Link: https://news-letter-automated.vercel.app/
 
 ## 📂 Project Structure
 ![Architecture Diagram](assets/Screenshot154050.png)
+
+## Website Working
+<img src="assets/Screenshot154257.png" alt="Working Image" width="600"/>
+
+## Phone Working
+<img src="assets/WhatsApp.jpeg" alt="Working Image" width="300"/>
+
+
+
+
