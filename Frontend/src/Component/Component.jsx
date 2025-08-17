@@ -165,15 +165,15 @@ const Component = () => {
                 <div className="text-lg font-semibold mb-2 text-black">
                   Analysis Result:
                 </div>
-               {analyzedData?.prediction?.toUpperCase() === "FAKE" ? (
-  <div className="text-base text-red-500">
-    {analyzedData.prediction}
-  </div>
-) : (
-  <div className="text-base text-green-500">
-    {analyzedData.prediction}
-  </div>
-)}
+                {analyzedData?.prediction?.toUpperCase() === "FAKE" ? (
+                  <div className="text-base text-red-500">
+                    might be {analyzedData.prediction}
+                  </div>
+                ) : (
+                  <div className="text-base text-green-500">
+                    might be {analyzedData.prediction}
+                  </div>
+                )}
 
               </div>
             )}

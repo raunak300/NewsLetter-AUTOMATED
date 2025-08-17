@@ -41,7 +41,6 @@ const sendNews=async(req,res)=>{
 }
 
 const getanalysis = async (req, res) => {
-  const { text } = req.body;
 
   try {
     const {text}=req.body;
